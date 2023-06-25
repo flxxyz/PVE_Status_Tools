@@ -10,18 +10,28 @@
 
 > 注意:需要使用`root`身份执行下面代码
 
-*在终端中按行分别执行以下代码：*
-```
-export LC_ALL=en_US.UTF-8
-apt update && apt -y install git && git clone https://github.com/iKoolCore/PVE_Status_Tools.git
-cd PVE_Status_Tools
-bash ./PVE_Status_Tools.sh
+
+```bash
+# 下载脚本时的相关依赖
+sudo apt update && apt -y install git curl
+
+# 执行脚本，开始添加 PVE_State_Tools
+sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/iKoolCore/PVE_Status_Tools/main/install.sh)"
 ```
 
-**或**  *直接执行下面一行代码：*
+如果发现 `curl: (7) Failed to connect to raw.githubusercontent.com port 443: Connection refused` 这种错误
+
+年轻人，你的网络运营商屏蔽了 GitHub
+
+可以使用如下方法尝试:
+
+```bash
+# 例子: HTTPS_PROXY=http://127.0.0.1:8081
+# 小写变量名字也是可以的
+
+sudo HTTPS_PROXY=你的代理地址 sh -c "$(curl -fsSL https://raw.githubusercontent.com/iKoolCore/PVE_Status_Tools/main/install.sh)"
 ```
-wget -qO-  https://raw.githubusercontent.com/iKoolCore/PVE_Status_Tools/main/PVE_Status_Tools.sh | bash
-```
+
 #### 二、还原方法：
 方法① ：
 用压缩包中对应文件`（PVE 7.2-3）`的原版覆盖，再重启 `pveproxy服务`： <br>

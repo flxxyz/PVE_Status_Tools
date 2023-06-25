@@ -7,7 +7,7 @@
 #"/usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js"
 
 # 检查并安装工具包
-if [[ -z $(which sensors) || -z $(which sensors) ]]; then
+if [[ -z $(which sensors) || -z $(which iostat) ]]; then
     apt-get update > /dev/null 2>&1
     if [ -z $(which sensors) ]; then
         echo -e "正在安装 lm-sensors ......"
@@ -902,11 +902,24 @@ sed -i '/'"'"'diskread'"'"', '"'"'diskwrite'"'"'/{n;s/		    store: rrdstore/		  
 # 去除订阅提示
 sed -Ezi.bak "s/(Ext.Msg.show\(\{\s+title: gettext\('No valid sub)/void\(\{ \/\/\1/g" /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
 
-# 删除企业订阅源
-rm /etc/apt/sources.list.d/pve-enterprise.list
+APT_SOURCES_LIST="/etc/apt/sources.list.d"
 
-# 增加PVE内核官方源
-echo "deb http://download.proxmox.com/debian/pve bullseye pve-no-subscription" >> /etc/apt/sources.list
+# 移除PVE企业订阅源
+PVE_ENTERPRISE_SOURCE="${APT_SOURCES_LIST}/pve-enterprise.list"
+if [ -f $PVE_ENTERPRISE_SOURCE ]; then
+    mv $PVE_ENTERPRISE_SOURCE "${PVE_ENTERPRISE_SOURCE}.bak"
+fi
+
+PVE_NO_SUBSCRIPTION_SOURCE="${APT_SOURCES_LIST}/pve-no-subscription.list"
+if [ ! -f $PVE_NO_SUBSCRIPTION_SOURCE ]; then
+    # 增加PVE内核官方源(对大多数人可能会体验糟糕)
+    # echo "deb http://download.proxmox.com/debian/pve bullseye pve-no-subscription" > $PVE_NO_SUBSCRIPTION_SOURCE
+
+    # 尝试使用清华源加快安装速度
+    echo "deb https://mirrors.tuna.tsinghua.edu.cn/proxmox/debian/pve bullseye pve-no-subscription" > $PVE_NO_SUBSCRIPTION_SOURCE
+    # 记得更新下索引
+    apt update
+fi
 
 echo -e "添加 PVE 硬件概要信息完成，正在重启 pveproxy 服务 ......"
 systemctl restart pveproxy
