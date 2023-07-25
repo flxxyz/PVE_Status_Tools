@@ -13,7 +13,7 @@
 
 ```bash
 # 下载脚本时的相关依赖
-sudo apt update && apt -y install git curl
+sudo apt update && sudo apt -y install git curl
 
 # 执行脚本，开始添加 PVE_State_Tools
 sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/iKoolCore/PVE_Status_Tools/main/install.sh)"
