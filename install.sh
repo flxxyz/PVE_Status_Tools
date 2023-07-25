@@ -22,12 +22,12 @@ _exists() {
   return $ret
 }
 
-SCRIPT_URL="https://raw.githubusercontent.com/iKoolCore/PVE_Status_Tools/main/PVE_Status_Tools.sh"
+TOOLS_URL="https://raw.githubusercontent.com/iKoolCore/PVE_Status_Tools/main/PVE_Status_Tools.sh"
 
 if _exists curl ; then
-  curl $INSTALL_URL | bash
+  curl $TOOLS_URL | bash
 elif _exists wget ; then
-  wget -O - $INSTALL_URL | bash
+  wget -O - $TOOLS_URL | bash
 else
   echo "Sorry, you must have curl or wget installed first."
   echo "Please install either of them and try again."
